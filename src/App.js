@@ -4,35 +4,30 @@ import "./App.css";
 import "destyle.css";
 
 class App extends Component {
-  _isMounted = false;
-
   constructor(props) {
     super(props);
-    this.state = {
-      weather: null,
-      main: null,
-      loading: true,
-    };
+    this.state = { weather: null, main: null, loading: true };
+    this.abortController = new AbortController()
   }
 
   async fetchData() {
     try {
-      const {weather, main} = await fetch("https://weather-proxy.freecodecamp.rocks/api/current?lat=35&lon=139").then((res) => res.json())
-      if (this._isMounted) {
+        const options = { signal: this.abortController.signal }
+        const response = await fetch("https://weather-proxy.freecodecamp.rocks/api/current?lat=35&lon=139", options)
+        const { weather, main } = await response.json()
         this.setState({ weather, main, loading: false });
-      }
     } catch(e) {
-      console.error(JSON.stringify(e))
+      if(e instanceof DOMException) return console.log("the component aborted the fetch request")
+      console.error(e)
     }
   }
 
   componentDidMount() {
-    this._isMounted = true;
     this.fetchData()
   }
 
   componentWillUnmount() {
-    this._isMounted = false;
+    this.abortController.abort()
   }
 
   render() {
