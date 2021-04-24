@@ -1,7 +1,18 @@
 import React, { Component } from "react";
 import { hot } from "react-hot-loader";
 import "destyle.css";
-import "./App.css";
+
+import { WiCloud, WiDaySunny, WiRain } from "react-icons/wi";
+import {
+  Main,
+  Section,
+  Weather,
+  Description,
+  Temperature,
+  City
+} from "./App.styled";
+import {GlobalStyle} from "./styled/globals.styled";
+
 
 class App extends Component {
   constructor(props) {
@@ -18,18 +29,16 @@ class App extends Component {
 
   getPosition(success, error) {
     if (!navigator.geolocation) {
-      return error({message: "Geolocation API not supported by your browser"});
+      return error({
+        message: "Geolocation API not supported by your browser",
+      });
     } else {
       const options = {
         enableHighAccuracy: true,
         timeout: 5000,
         maximumAge: 0,
       };
-      return navigator.geolocation.getCurrentPosition(
-        success,
-        error,
-        options
-      );
+      return navigator.geolocation.getCurrentPosition(success, error, options);
     }
   }
 
@@ -56,7 +65,7 @@ class App extends Component {
       this.fetchWeatherData(latitude, longitude);
     };
 
-    const onPositionError = ({message}) => {
+    const onPositionError = ({ message }) => {
       this.setState({ error: message, loading: false });
     };
 
@@ -74,18 +83,41 @@ class App extends Component {
   render() {
     if (this.state.loading) return <div>loading...</div>;
     if (this.state.error) return <div>{this.state.error}</div>;
+
+    const design = {
+      Clouds:
+        "linear-gradient(180deg, rgba(144, 164, 174, 1) 0%, rgba(144, 164, 174, .8) 100%);",
+      Rain:
+        "linear-gradient(180deg, rgba(63, 81, 181, 1) 0%, rgba(63, 81, 181, .8) 100%);",
+      Sun:
+        "linear-gradient(180deg, rgba(255, 179, 0, 1) 0%, rgba(255, 179, 0, .8) 100%);",
+    };
+
+    const icons = {
+      Clouds: WiCloud,
+      Rain: WiRain,
+      Sun: WiDaySunny,
+    };
+
+    const main = this.state.weather[0].main;
+    const Icon = icons[main];
+
     return (
-      <main>
-        <ul className="container">
-          <li>
-            <img src={this.state.weather[0].icon}></img>
-          </li>
-          <li>{this.state.weather[0].main}</li>
-          <li>{this.state.weather[0].description}</li>
-          <li>{this.state.main.temp}</li>
-          <li>{this.state.name}</li>
-        </ul>
-      </main>
+      <>
+        <GlobalStyle />
+        <Main background={design[this.state.weather[0].main]} >
+          <Section>
+            <Icon
+              style={{ color: "#fff", fontSize: "5rem", fontWeight: 800 }}
+              title={`${this.state.weather[0].main.toLowerCase()}-icon`}
+            />
+            <Weather>{this.state.weather[0].main}</Weather>
+            <Description>{this.state.weather[0].description}</Description>
+            <Temperature>{this.state.main.temp}°C</Temperature>
+            <City>{this.state.name}</City>
+          </Section>
+        </Main>
+      </>
     );
   }
 }

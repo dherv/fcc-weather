@@ -26,12 +26,12 @@ describe("App component", () => {
 
   test("should render the current weather icon", async () => {
     render(<App/>)
-    expect(await screen.findByRole("img")).toHaveAttribute("src", "https://cdn.freecodecamp.org/weather-icons/02n.png")
+    expect(await screen.findByTitle("clouds-icon")).toBeDefined()
   })
 
   test("should render the current weather temperature", async () => {
     render(<App/>)
-    expect(await screen.findByText("25")).toBeDefined()
+    expect(await screen.findByText("25°C")).toBeDefined()
   })
 
   test("should render the current city name", async () => {
