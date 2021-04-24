@@ -2,6 +2,13 @@ import React from 'react'
 import {render, screen} from "@testing-library/react"
 import App from './App'
 
+const mockGeolocation = {
+  getCurrentPosition: jest.fn((success, error) => success({coords: {latitude: 35, longitude: 134}})),
+  watchPosition: jest.fn()
+};
+
+global.navigator.geolocation = mockGeolocation;
+
 describe("App component", () => {
   test("should render the loading screen", () => {
     render(<App/>)

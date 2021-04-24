@@ -5,10 +5,13 @@ export const handlers = [
   rest.get(
     "https://weather-proxy.freecodecamp.rocks/api/current",
     (req, res, ctx) => {
+      const latitude = req.url.searchParams.get('lat')
+      const longitude = req.url.searchParams.get('lon')
+
       return res(
         ctx.status(200),
         ctx.json({
-          coord: { lon: 139, lat: 35 },
+          coord: { lon: longitude, lat: latitude },
           weather: [
             {
               id: 801,

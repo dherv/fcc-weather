@@ -1,3 +1,17 @@
-.App {
-  font-family: Arial, Helvetica, sans-serif;
+body {
+  font-family: Roboto, Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+main {
+  padding: 1rem;
+  height: 100vh;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
 }
