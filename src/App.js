@@ -1,18 +1,8 @@
 import React, { Component } from "react";
 import { hot } from "react-hot-loader";
 import "destyle.css";
-
-import { WiCloud, WiDaySunny, WiRain } from "react-icons/wi";
-import {
-  Main,
-  Section,
-  Weather,
-  Description,
-  Temperature,
-  City
-} from "./App.styled";
-import {GlobalStyle} from "./styled/globals.styled";
-
+import { Weather } from "./components/Weather";
+import { Template } from "./components/Template"
 
 class App extends Component {
   constructor(props) {
@@ -20,7 +10,7 @@ class App extends Component {
     this.state = {
       weather: null,
       main: null,
-      name: null,
+      city: null,
       loading: true,
       error: null,
     };
@@ -34,7 +24,7 @@ class App extends Component {
       });
     } else {
       const options = {
-        enableHighAccuracy: true,
+        enableHighAccuracy: false,
         timeout: 5000,
         maximumAge: 0,
       };
@@ -50,7 +40,7 @@ class App extends Component {
         options
       );
       const { weather, main, name } = await response.json();
-      this.setState({ weather, main, name, loading: false });
+      this.setState({ weather, main, city: name, loading: false });
     } catch (e) {
       if (e instanceof DOMException)
         return console.log("Fetch request aborted");
@@ -81,43 +71,20 @@ class App extends Component {
   }
 
   render() {
-    if (this.state.loading) return <div>loading...</div>;
-    if (this.state.error) return <div>{this.state.error}</div>;
+    if (this.state.loading) return <Template>loading...</Template>;
+    if (this.state.error) return <Template>{this.state.error}</Template>;
 
-    const design = {
-      Clouds:
-        "linear-gradient(180deg, rgba(144, 164, 174, 1) 0%, rgba(144, 164, 174, .8) 100%);",
-      Rain:
-        "linear-gradient(180deg, rgba(63, 81, 181, 1) 0%, rgba(63, 81, 181, .8) 100%);",
-      Sun:
-        "linear-gradient(180deg, rgba(255, 179, 0, 1) 0%, rgba(255, 179, 0, .8) 100%);",
-    };
-
-    const icons = {
-      Clouds: WiCloud,
-      Rain: WiRain,
-      Sun: WiDaySunny,
-    };
-
-    const main = this.state.weather[0].main;
-    const Icon = icons[main];
+    const { main, description } = this.state.weather[0];
 
     return (
-      <>
-        <GlobalStyle />
-        <Main background={design[this.state.weather[0].main]} >
-          <Section>
-            <Icon
-              style={{ color: "#fff", fontSize: "5rem", fontWeight: 800 }}
-              title={`${this.state.weather[0].main.toLowerCase()}-icon`}
-            />
-            <Weather>{this.state.weather[0].main}</Weather>
-            <Description>{this.state.weather[0].description}</Description>
-            <Temperature>{this.state.main.temp}°C</Temperature>
-            <City>{this.state.name}</City>
-          </Section>
-        </Main>
-      </>
+      <Template main={main}>
+        <Weather
+          type={main}
+          description={description}
+          temperature={this.state.main.temp}
+          city={this.state.city}
+        />
+      </Template>
     );
   }
 }
