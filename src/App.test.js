@@ -33,4 +33,9 @@ describe("App component", () => {
     render(<App/>)
     expect(await screen.findByText("25")).toBeDefined()
   })
+
+  test("should render the current city name", async () => {
+    render(<App/>)
+    expect(await screen.findByText("Shuzenji")).toBeDefined()
+  })
 })

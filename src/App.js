@@ -6,17 +6,30 @@ import "./App.css";
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { weather: null, main: null, loading: true, locating: null };
+    this.state = {
+      weather: null,
+      main: null,
+      name: null,
+      loading: true,
+      error: null,
+    };
     this.abortController = new AbortController();
   }
 
   getPosition(success, error) {
     if (!navigator.geolocation) {
-      console.log("Geolocation is not supported by your browser");
-      return error({ error: "no geolocation" });
+      return error({message: "Geolocation API not supported by your browser"});
     } else {
-      console.log("Locating…");
-      return navigator.geolocation.getCurrentPosition(success, error);
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      };
+      return navigator.geolocation.getCurrentPosition(
+        success,
+        error,
+        options
+      );
     }
   }
 
@@ -27,11 +40,11 @@ class App extends Component {
         `https://weather-proxy.freecodecamp.rocks/api/current?lat=${latitude}&lon=${longitude}`,
         options
       );
-      const { weather, main } = await response.json();
-      this.setState({ weather, main, loading: false });
+      const { weather, main, name } = await response.json();
+      this.setState({ weather, main, name, loading: false });
     } catch (e) {
       if (e instanceof DOMException)
-        return console.log("the component aborted the fetch request");
+        return console.log("Fetch request aborted");
       console.error(e);
     }
   }
@@ -43,9 +56,8 @@ class App extends Component {
       this.fetchWeatherData(latitude, longitude);
     };
 
-    const onPositionError = () => {
-      console.error("could not locate");
-      this.setState({ locating: "could not locate" });
+    const onPositionError = ({message}) => {
+      this.setState({ error: message, loading: false });
     };
 
     this.getPosition(onPositionSuccessful, onPositionError);
@@ -61,7 +73,7 @@ class App extends Component {
 
   render() {
     if (this.state.loading) return <div>loading...</div>;
-    if (this.state.locating) return <div>{this.state.locating}</div>;
+    if (this.state.error) return <div>{this.state.error}</div>;
     return (
       <main>
         <ul className="container">
@@ -71,6 +83,7 @@ class App extends Component {
           <li>{this.state.weather[0].main}</li>
           <li>{this.state.weather[0].description}</li>
           <li>{this.state.main.temp}</li>
+          <li>{this.state.name}</li>
         </ul>
       </main>
     );
