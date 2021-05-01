@@ -1,9 +1,10 @@
-import React, { Component } from "react";
+import React, { Component, Suspense } from "react";
 import { hot } from "react-hot-loader";
 import "destyle.css";
-import { Weather } from "./components/Weather";
-import { Template } from "./components/Template"
 
+import { Template } from "./components/Template";
+
+const Weather = React.lazy(() => import("./components/Weather"));
 class App extends Component {
   constructor(props) {
     super(props);
@@ -78,12 +79,14 @@ class App extends Component {
 
     return (
       <Template main={main}>
-        <Weather
-          type={main}
-          description={description}
-          temperature={this.state.main.temp}
-          city={this.state.city}
-        />
+        <Suspense fallback={<Template>loading...</Template>}>
+          <Weather
+            type={main}
+            description={description}
+            temperature={this.state.main.temp}
+            city={this.state.city}
+          />
+        </Suspense>
       </Template>
     );
   }

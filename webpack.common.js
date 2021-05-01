@@ -1,6 +1,5 @@
 const path = require("path");
-const webpack = require("webpack");
-
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: "./src/index.js",
   mode: "development",
@@ -19,16 +18,15 @@ module.exports = {
     ]
   },
   resolve: { extensions: ["*", ".js", ".jsx"] },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'Weather App',
+      template: "./public/index.html",
+      filename: "./index.html"
+    }),
+  ],
   output: {
     path: path.resolve(__dirname, "dist/"),
-    publicPath: "/dist/",
     filename: "bundle.js"
-  },
-  devServer: {
-    contentBase: path.join(__dirname, "public/"),
-    port: 3000,
-    publicPath: "http://localhost:3000/dist/",
-    hotOnly: true
-  },
-  plugins: [new webpack.HotModuleReplacementPlugin()]
+  }
 };

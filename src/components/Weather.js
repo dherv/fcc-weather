@@ -31,4 +31,5 @@ import { WiCloud, WiDaySunny, WiRain } from "react-icons/wi";
   );
 };
 
-export const Weather = React.memo(WeatherComponent)
+ const Weather = React.memo(WeatherComponent)
+ export default Weather
