@@ -6,7 +6,8 @@
   "scripts": {
     "start": "webpack serve --open --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "serve": "npm run build && serve -s dist"
   },
   "keywords": [],
   "author": "",
@@ -25,15 +26,19 @@
     "babel-loader": "^8.0.2",
     "babel-plugin-styled-components": "^1.12.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "copy-webpack-plugin": "^8.1.1",
     "css-loader": "^5.2.4",
     "html-webpack-plugin": "^5.3.1",
+    "http-server": "^0.12.3",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^26.6.3",
     "msw": "^0.28.0",
     "style-loader": "^0.23.0",
     "webpack": "^5.36.2",
     "webpack-dev-server": "^3.1.8",
-    "whatwg-fetch": "^3.6.2"
+    "webpack-manifest-plugin": "^3.1.1",
+    "whatwg-fetch": "^3.6.2",
+    "workbox-webpack-plugin": "^6.1.5"
   },
   "dependencies": {
     "@babel/runtime": "^7.13.17",
